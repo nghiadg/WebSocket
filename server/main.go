@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -21,6 +22,28 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		return
+	}
+
+	frame := Frame{
+		PayloadData: []byte("say hello to client"),
+		Opcode:      0x80 | 0x1, //Set FIN bit is 1
+	}
+
+	err = ws.Send(frame)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for {
+		frameRecv, err := ws.Recv()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		fmt.Println("Client say: ", string(frameRecv.PayloadData))
 	}
 
 }

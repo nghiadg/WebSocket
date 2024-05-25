@@ -4,4 +4,8 @@ function connectWebSocket() {
   websocket.onopen = (event) => {
     console.log("Connect websocket success!");
   };
+
+  websocket.onmessage = (event) => {
+    console.log("Server say: ", event.data);
+  };
 }
